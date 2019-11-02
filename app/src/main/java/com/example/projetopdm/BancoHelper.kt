@@ -4,7 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class BancoHelper(context: Context): SQLiteOpenHelper(context, "tb_denuncias.db", null, 1) {
+class BancoHelper(context: Context): SQLiteOpenHelper(context, "denuncias.db", null, 1) {
 
     override fun onCreate(db: SQLiteDatabase?) {
         val sql = "CREATE TABLE IF NOT EXISTS tb_denuncias(" +

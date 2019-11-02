@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity() {
             if (requestCode == CAMERA) {
                 val imagem = data?.extras?.get("data") as Bitmap
                 this.ivCamera.setImageBitmap(imagem)
+                Log.i("APP_DENUNCIA", "AQUII")
             }
         }
     }
@@ -82,12 +83,12 @@ class MainActivity : AppCompatActivity() {
             val local = this@MainActivity.etLocal.text.toString()
             val imagem = this@MainActivity.ivCamera.drawable.toBitmap()
 
-            val res = "${titulo} - ${descricao} - ${imagem}"
-            val denuncia = Denuncia(titulo, descricao, "02/11/2019", "DER", "Aqui")
+            val denuncia = Denuncia(titulo, descricao, "02/11/2019", "DER", local)
             val itResp = Intent()
 
-            Log.i("APP_DENUNCIA", res)
-            itResp.putExtra("DENUNCIA", res)
+            Log.i("APP_DENUNCIA", "Denuncia: ${denuncia}")
+
+            itResp.putExtra("DENUNCIA", denuncia)
             setResult(Activity.RESULT_OK, itResp)
             finish()
 
