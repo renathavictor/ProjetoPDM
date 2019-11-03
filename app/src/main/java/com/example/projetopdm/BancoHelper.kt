@@ -13,8 +13,8 @@ class BancoHelper(context: Context): SQLiteOpenHelper(context, "denuncias.db", n
                 "descricao TEXT, " +
                 "data TEXT, " +
                 "orgao TEXT, " +
-                "localizacao TEXT) "
-//                "foto BLOB)"
+                "localizacao TEXT," +
+                "foto BLOB) "
 
         db?.execSQL(sql)
     }

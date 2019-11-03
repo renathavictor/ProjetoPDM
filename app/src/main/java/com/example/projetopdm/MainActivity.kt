@@ -30,6 +30,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Build
 import androidx.annotation.RequiresApi
+import java.io.ByteArrayOutputStream
 
 
 class MainActivity : AppCompatActivity() {
@@ -78,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         val local = this@MainActivity.etLocal.text.toString()
         val imagem = this@MainActivity.ivCamera.drawable.toBitmap()
 
-        val denuncia = Denuncia(titulo, descricao, "02/11/2019", "DER", local)
+        val denuncia = Denuncia(titulo, descricao, "02/11/2019", "DER", local, toByteArrayImg(imagem))
 
         val itResp = Intent(this, ListActivity::class.java)
         itResp.putExtra("DENUNCIA", denuncia)
@@ -87,6 +88,12 @@ class MainActivity : AppCompatActivity() {
 
 //            setResult(Activity.RESULT_OK, itResp)
         startActivityForResult(itResp, FORMULARIO)
+    }
+
+    fun toByteArrayImg(img: Bitmap): ByteArray {
+        var byteImg: ByteArrayOutputStream = ByteArrayOutputStream()
+        img.compress(Bitmap.CompressFormat.JPEG, 100, byteImg)
+        return byteImg.toByteArray()
     }
 
 

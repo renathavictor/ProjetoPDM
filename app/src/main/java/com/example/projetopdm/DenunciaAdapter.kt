@@ -1,12 +1,16 @@
 package com.example.projetopdm
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.ImageView
 import android.widget.TextView
+import java.io.ByteArrayInputStream
 
 class DenunciaAdapter(var context: Context, var listDenuncias: ArrayList<Denuncia>) : BaseAdapter() {
 
@@ -22,7 +26,10 @@ class DenunciaAdapter(var context: Context, var listDenuncias: ArrayList<Denunci
         }
 
         val tv = linha.findViewById<TextView>(R.id.tvLvTituloDenuncia)
+        val iv = linha.findViewById<ImageView>(R.id.ivLvFotoDenuncia)
         tv.text = denuncia.titulo
+        iv.setImageBitmap(toBitmapFromArray(denuncia.foto))
+
 
         if (position % 2 == 0) {
             linha.setBackgroundColor(Color.rgb(0, 255, 255))
@@ -46,6 +53,11 @@ class DenunciaAdapter(var context: Context, var listDenuncias: ArrayList<Denunci
 
     fun update(){
         notifyDataSetChanged()
+    }
+
+    fun toBitmapFromArray(img: ByteArray): Bitmap? {
+        var img : ByteArrayInputStream = ByteArrayInputStream(img)
+        return BitmapFactory.decodeStream(img)
     }
 
 }
