@@ -28,12 +28,15 @@ import androidx.core.app.ComponentActivity
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
+import android.os.Build
+import androidx.annotation.RequiresApi
 
 
 class MainActivity : AppCompatActivity() {
 
     val CAMERA = 1
+    val FORMULARIO = 2
+    private lateinit var dao: DenunciaDAO
     private lateinit var btEnviar: Button
     private lateinit var btCancelar: Button
     private lateinit var etTitulo: EditText
@@ -46,6 +49,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        this.dao = DenunciaDAO(this)
+
         this.btEnviar = findViewById(R.id.btMainEnviar)
         this.btCancelar = findViewById(R.id.btMainCancelar)
         this.etTitulo = findViewById(R.id.etMainTitulo)
@@ -53,16 +58,37 @@ class MainActivity : AppCompatActivity() {
         this.etLocal = findViewById(R.id.etMainLocalizacao)
         this.ivCamera = findViewById(R.id.ivMainCamera)
 
-        this.btEnviar.setOnClickListener{OnClickBotaoEnviar()}
+        this.btEnviar.setOnClickListener{onClickEnviar(it)}
         this.btCancelar.setOnClickListener{
-            finish()
+            this.etTitulo.text = null
+            this.etLocal.text = null
+            this.etInfo.text = null
+            this.ivCamera.setImageBitmap(null)
         }
 
-        fab.setOnClickListener { view ->
+        fab.setOnClickListener {
             val itFoto = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             startActivityForResult(itFoto, CAMERA)
         }
     }
+
+    fun onClickEnviar(view: View) {
+        val titulo = this@MainActivity.etTitulo.text.toString()
+        val descricao = this@MainActivity.etInfo.text.toString()
+        val local = this@MainActivity.etLocal.text.toString()
+        val imagem = this@MainActivity.ivCamera.drawable.toBitmap()
+
+        val denuncia = Denuncia(titulo, descricao, "02/11/2019", "DER", local)
+
+        val itResp = Intent(this, ListActivity::class.java)
+        itResp.putExtra("DENUNCIA", denuncia)
+        this.dao.insert(denuncia)
+        Log.i("APP_DENUNCIA", "denuncia ${denuncia} AQUIIIIIIIII")
+
+//            setResult(Activity.RESULT_OK, itResp)
+        startActivityForResult(itResp, FORMULARIO)
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -71,29 +97,33 @@ class MainActivity : AppCompatActivity() {
             if (requestCode == CAMERA) {
                 val imagem = data?.extras?.get("data") as Bitmap
                 this.ivCamera.setImageBitmap(imagem)
-                Log.i("APP_DENUNCIA", "AQUII")
             }
+//            else if (requestCode == FORMULARIO) {
+//                val denuncia = (data?.extras?.get("data")) as Denuncia
+//                this.dao.insert(denuncia)
+//                Log.i("APP_DENUNCIA", "Denuncia: ")
+//
+//            }
         }
     }
 
-    inner class OnClickBotaoEnviar: View.OnClickListener {
-        override fun onClick(v: View?) {
-            val titulo = this@MainActivity.etTitulo.text.toString()
-            val descricao = this@MainActivity.etInfo.text.toString()
-            val local = this@MainActivity.etLocal.text.toString()
-            val imagem = this@MainActivity.ivCamera.drawable.toBitmap()
-
-            val denuncia = Denuncia(titulo, descricao, "02/11/2019", "DER", local)
-            val itResp = Intent()
-
-            Log.i("APP_DENUNCIA", "Denuncia: ${denuncia}")
-
-            itResp.putExtra("DENUNCIA", denuncia)
-            setResult(Activity.RESULT_OK, itResp)
-            finish()
-
-        }
-
-    }
+//    inner class OnClickBotaoEnviar: View.OnClickListener {
+//        override fun onClick(v: View?) {
+//            val titulo = this@MainActivity.etTitulo.text.toString()
+//            val descricao = this@MainActivity.etInfo.text.toString()
+//            val local = this@MainActivity.etLocal.text.toString()
+//            val imagem = this@MainActivity.ivCamera.drawable.toBitmap()
+//
+//            val denuncia = Denuncia(titulo, descricao, "02/11/2019", "DER", local)
+//
+//            val itResp = Intent()
+//
+//            itResp.putExtra("DENUNCIA", denuncia)
+////            setResult(Activity.RESULT_OK, itResp)
+//            startActivityForResult(itResp, FORMULARIO)
+//            finish()
+//        }
+//
+//    }
 
 }
