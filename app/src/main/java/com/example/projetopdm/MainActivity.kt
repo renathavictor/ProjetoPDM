@@ -20,16 +20,6 @@ import android.widget.ImageView
 import androidx.core.graphics.drawable.toBitmap
 
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
-import java.sql.Time
-import java.text.SimpleDateFormat
-import java.util.*
-import androidx.core.app.ComponentActivity
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.os.Build
-import androidx.annotation.RequiresApi
 import java.io.ByteArrayOutputStream
 
 

@@ -1,10 +1,12 @@
 package com.example.projetopdm
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_list.*
 
 class ListActivity : AppCompatActivity() {
 
@@ -22,9 +24,11 @@ class ListActivity : AppCompatActivity() {
         this.lvDenuncia = findViewById(R.id.lvListDenuncia)
         this.lvDenuncia.adapter = DenunciaAdapter(this, this.lista)
 
-        Toast.makeText(this, "Denúncia enviada com sucesso", Toast.LENGTH_SHORT).show()
 
-//        val denuncia = intent.getStringExtra("DENUNCIA")
-//        Toast.makeText(this,denuncia, Toast.LENGTH_SHORT).show()
+        fabList.setOnClickListener{
+            val it = Intent(this, MainActivity::class.java)
+            startActivity(it)
+        }
+
     }
 }
