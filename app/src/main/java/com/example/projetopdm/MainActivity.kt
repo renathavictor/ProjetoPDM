@@ -1,8 +1,11 @@
 package com.example.projetopdm
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.hardware.Sensor
+import android.hardware.SensorManager
 import android.media.MicrophoneDirection
 import android.os.Bundle
 import android.os.Environment
@@ -29,7 +32,8 @@ class MainActivity : AppCompatActivity() {
     val FORMULARIO = 2
     private lateinit var dao: DenunciaDAO
     private lateinit var btEnviar: Button
-    private lateinit var btCancelar: Button
+    private lateinit var btVoltar: Button
+//    private lateinit var btCancelar: Button
     private lateinit var etTitulo: EditText
     private lateinit var etInfo: EditText
     private lateinit var etLocal: EditText
@@ -43,18 +47,24 @@ class MainActivity : AppCompatActivity() {
         this.dao = DenunciaDAO(this)
 
         this.btEnviar = findViewById(R.id.btMainEnviar)
-        this.btCancelar = findViewById(R.id.btMainCancelar)
+//        this.btCancelar = findViewById(R.id.btMainCancelar)
+        this.btVoltar = findViewById(R.id.btMainVoltar)
         this.etTitulo = findViewById(R.id.etMainTitulo)
         this.etInfo = findViewById(R.id.etMainInfo)
         this.etLocal = findViewById(R.id.etMainLocalizacao)
         this.ivCamera = findViewById(R.id.ivMainCamera)
 
         this.btEnviar.setOnClickListener{onClickEnviar(it)}
-        this.btCancelar.setOnClickListener{
-            this.etTitulo.text = null
-            this.etLocal.text = null
-            this.etInfo.text = null
-            this.ivCamera.setImageBitmap(null)
+//        this.btCancelar.setOnClickListener{
+//            this.etTitulo.text = null
+//            this.etLocal.text = null
+//            this.etInfo.text = null
+//            this.ivCamera.setImageBitmap(null)
+//        }
+        this.btVoltar.setOnClickListener{
+            val it = Intent(this, ListActivity::class.java)
+            startActivity(it)
+            finish()
         }
 
         fab.setOnClickListener {

@@ -28,6 +28,7 @@ class ListActivity : AppCompatActivity() {
         fabList.setOnClickListener{
             val it = Intent(this, MainActivity::class.java)
             startActivity(it)
+            finish()
         }
 
     }
