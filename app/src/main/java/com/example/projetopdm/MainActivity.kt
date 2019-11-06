@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.location.Location
@@ -66,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         this.etLocal = findViewById(R.id.etMainLocalizacao)
         this.ivCamera = findViewById(R.id.ivMainCamera)
 
-        this.btEnviar.setOnClickListener{onClickEnviar(it)}
+
 //        this.btCancelar.setOnClickListener{
 //            this.etTitulo.text = null
 //            this.etLocal.text = null
@@ -84,6 +85,30 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(itFoto, CAMERA)
         }
 
+        val denuncia = intent.getSerializableExtra("DENUNCIA") as Denuncia
+        if (denuncia != null){
+            this.etTitulo.text.append((denuncia as Denuncia).titulo)
+            this.etInfo.text.append((denuncia as Denuncia).descricao)
+            this.etLocal.text.append((denuncia as Denuncia).localizacao)
+            this.ivCamera.setImageBitmap((BitmapFactory.decodeByteArray(((denuncia as Denuncia).foto), 0, ((denuncia as Denuncia).foto).size)) as Bitmap)
+            this.btEnviar.setOnClickListener{
+                val denunciaEdit = Denuncia(
+                    this.etTitulo.text.toString(),
+                    this.etInfo.text.toString(),
+                    "02/11/2019",
+                    "DER",
+                    this.etLocal.text.toString(),
+                    toByteArrayImg(this.ivCamera.drawable.toBitmap())
+                )
+                val intent = Intent(this, ListActivity::class.java)
+                intent.putExtra("DENUNCIA_EDIT", denunciaEdit)
+
+                this.dao.update(denuncia.id, denunciaEdit)
+                startActivity(intent)
+            }
+        }else {
+            this.btEnviar.setOnClickListener{onClickEnviar(it)}
+        }
         getLastLocation()
     }
 

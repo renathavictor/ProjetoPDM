@@ -53,4 +53,16 @@ class DenunciaDAO {
         return lista
     }
 
+    fun update(id:Int, denuncia: Denuncia){
+        val cv = ContentValues()
+        val whered = arrayOf(denuncia.id.toString())
+        cv.put("titulo", denuncia.titulo)
+        cv.put("descricao", denuncia.descricao)
+        cv.put("data", denuncia.data)
+        cv.put("orgao", denuncia.orgao)
+        cv.put("localizacao", denuncia.localizacao)
+        cv.put("foto", denuncia.foto)
+        this.bancoHelper.writableDatabase.update("denuncias", cv, "id = ?", arrayOf(id.toString()))
+    }
+
 }
