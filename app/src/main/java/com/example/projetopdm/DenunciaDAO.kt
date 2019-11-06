@@ -32,18 +32,24 @@ class DenunciaDAO {
         val banco = this.bancoHelper.readableDatabase
         val colunas = arrayOf("id", "titulo", "descricao", "data", "orgao", "localizacao", "foto")
         val c = banco.query("denuncias", colunas, null, null, null, null, null)
-        c.moveToFirst()
-        do {
-            val id = c.getInt(c.getColumnIndex("id")) //autoincrementável
-            val titulo = c.getString(c.getColumnIndex("titulo"))
-            val descricao = c.getString(c.getColumnIndex("descricao"))
-            val data = c.getString(c.getColumnIndex("data"))
-            val orgao = c.getString(c.getColumnIndex("orgao"))
-            val localizacao = c.getString(c.getColumnIndex("localizacao"))
-            val foto = c.getBlob(c.getColumnIndex("foto"))
-            val denuncia = Denuncia(id, titulo, descricao, data, orgao, localizacao, foto)
-            lista.add(denuncia)
-        } while (c.moveToNext())
+
+
+
+        if (c != null && c.count > 0) {
+            c?.moveToFirst()
+
+            do {
+                val id = c.getInt(c.getColumnIndex("id")) //autoincrementável
+                val titulo = c.getString(c.getColumnIndex("titulo"))
+                val descricao = c.getString(c.getColumnIndex("descricao"))
+                val data = c.getString(c.getColumnIndex("data"))
+                val orgao = c.getString(c.getColumnIndex("orgao"))
+                val localizacao = c.getString(c.getColumnIndex("localizacao"))
+                val foto = c.getBlob(c.getColumnIndex("foto"))
+                val denuncia = Denuncia(id, titulo, descricao, data, orgao, localizacao, foto)
+                lista.add(denuncia)
+            } while (c?.moveToNext()!!)
+        }
         return lista
     }
 
