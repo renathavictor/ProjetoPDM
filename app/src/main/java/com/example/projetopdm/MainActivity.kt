@@ -85,8 +85,9 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(itFoto, CAMERA)
         }
 
-        val denuncia = intent.getSerializableExtra("DENUNCIA") as Denuncia
+        val denuncia = intent.getSerializableExtra("DENUNCIA")
         if (denuncia != null){
+            val denuncia = intent.getSerializableExtra("DENUNCIA")  as Denuncia
             this.etTitulo.text.append((denuncia as Denuncia).titulo)
             this.etInfo.text.append((denuncia as Denuncia).descricao)
             this.etLocal.text.append((denuncia as Denuncia).localizacao)
