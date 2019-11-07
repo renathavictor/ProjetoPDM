@@ -44,6 +44,7 @@
 
         <EditText
             android:id="@+id/etMainLocalizacao"
+            android:inputType="none"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Localizacao" />
@@ -73,6 +74,11 @@
                 android:text="enviar" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/display_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Teste" />
     </LinearLayout>
 
 

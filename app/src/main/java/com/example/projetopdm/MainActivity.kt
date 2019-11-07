@@ -9,21 +9,18 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.Location
 import android.location.LocationManager
-import android.media.MicrophoneDirection
+import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.os.Looper
-import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
@@ -31,10 +28,12 @@ import androidx.core.graphics.drawable.toBitmap
 import com.google.android.gms.location.*
 
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import java.io.ByteArrayOutputStream
+import java.io.IOException
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SensorEventListener  {
 
     val CAMERA = 1
     val FORMULARIO = 2
@@ -46,6 +45,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var etInfo: EditText
     private lateinit var etLocal: EditText
     private lateinit var ivCamera: ImageView
+
+    // sensor
+    private lateinit var sensorManager: SensorManager
+    private var sensor: Sensor? = null
+    private lateinit var root: View
+
 
     val PERMISSION_ID = 42
     lateinit var mFusedLocationClient: FusedLocationProviderClient
@@ -67,6 +72,10 @@ class MainActivity : AppCompatActivity() {
         this.etLocal = findViewById(R.id.etMainLocalizacao)
         this.ivCamera = findViewById(R.id.ivMainCamera)
 
+
+        display_img.visibility = View.INVISIBLE
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
 
 //        this.btCancelar.setOnClickListener{
 //            this.etTitulo.text = null
@@ -112,6 +121,16 @@ class MainActivity : AppCompatActivity() {
         getLastLocation()
     }
 
+    override fun onResume() {
+        super.onResume()
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sensorManager!!.unregisterListener(this)
+    }
+
     fun onClickEnviar(view: View) {
         val titulo = this@MainActivity.etTitulo.text.toString()
         val descricao = this@MainActivity.etInfo.text.toString()
@@ -122,11 +141,22 @@ class MainActivity : AppCompatActivity() {
 
         val itResp = Intent(this, ListActivity::class.java)
         itResp.putExtra("DENUNCIA", denuncia)
+//        onClickEmail(denuncia)
         this.dao.insert(denuncia)
         Log.i("APP_DENUNCIA", "denuncia ${denuncia} AQUIIIIIIIII")
 
 //            setResult(Activity.RESULT_OK, itResp)
         startActivityForResult(itResp, FORMULARIO)
+    }
+
+
+    fun onClickEmail(denuncia: Denuncia){
+        Toast.makeText(this, "Chegou aqui", Toast.LENGTH_SHORT).show()
+        val uri = Uri.parse("mailto:renatha.victor@academico.ifpb.edu.br")
+        val it = Intent(Intent.ACTION_SENDTO, uri)
+        it.putExtra(Intent.EXTRA_SUBJECT, "${denuncia.titulo}")
+        it.putExtra(Intent.EXTRA_TEXT, "Descricao da denuncia: ${denuncia.descricao} \n Local: ${denuncia.localizacao} \n Data: ${denuncia.data}")
+        startActivity(it)
     }
 
     fun toByteArrayImg(img: Bitmap): ByteArray {
@@ -171,6 +201,27 @@ class MainActivity : AppCompatActivity() {
 //        }
 //
 //    }
+
+    // SENSOR
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+    }
+    var isRunning = false
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        try {
+            if (event!!.values[0] < 40 && isRunning == false) {
+                var value = event.values[0]
+                isRunning = true
+                display_img.visibility = View.VISIBLE
+            } else {
+                isRunning = false
+                display_img.visibility = View.INVISIBLE
+            }
+        } catch (e: IOException) {
+
+        }
+    }
 
 
     //LOCALIZAÇÃO
