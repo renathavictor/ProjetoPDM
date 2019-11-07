@@ -116,9 +116,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
                 startActivity(intent)
             }
         }else {
+            getLastLocation()
             this.btEnviar.setOnClickListener{onClickEnviar(it)}
         }
-        getLastLocation()
     }
 
     override fun onResume() {
