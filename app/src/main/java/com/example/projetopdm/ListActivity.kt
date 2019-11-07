@@ -26,6 +26,7 @@ class ListActivity : AppCompatActivity() {
         this.lvDenuncia = findViewById(R.id.lvListDenuncia)
         this.lvDenuncia.adapter = DenunciaAdapter(this, this.lista)
         this.lvDenuncia.setOnItemClickListener(ClickList())
+        this.lvDenuncia.setOnItemLongClickListener(LongClickList())
 
 
         fabList.setOnClickListener{
@@ -33,7 +34,12 @@ class ListActivity : AppCompatActivity() {
             startActivity(it)
             finish()
         }
+    }
 
+    fun atualizaLista(){
+        this.lista.clear()
+        this.lista.addAll(this.dao.get())
+        (this.lvDenuncia.adapter as DenunciaAdapter).update()
     }
 
     inner class ClickList : AdapterView.OnItemClickListener{
@@ -48,4 +54,12 @@ class ListActivity : AppCompatActivity() {
         }
     }
 
+    inner class LongClickList : AdapterView.OnItemLongClickListener{
+        override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
+            val denuncia = this@ListActivity.lvDenuncia.adapter.getItem(position) as Denuncia
+            this@ListActivity.dao.delete(denuncia)
+            this@ListActivity.atualizaLista()
+            return true
+        }
+    }
 }

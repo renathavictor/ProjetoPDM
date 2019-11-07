@@ -65,4 +65,9 @@ class DenunciaDAO {
         this.bancoHelper.writableDatabase.update("denuncias", cv, "id = ?", arrayOf(id.toString()))
     }
 
+    fun delete(denunca: Denuncia){
+        val where = "id = ?"
+        val wherep = arrayOf(denunca.id.toString())
+        this.bancoHelper.writableDatabase.delete("denuncias", where, wherep)
+    }
 }
