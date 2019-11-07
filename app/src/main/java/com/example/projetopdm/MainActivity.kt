@@ -210,7 +210,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
 
     override fun onSensorChanged(event: SensorEvent?) {
         try {
-            if (event!!.values[0] < 40 && isRunning == false) {
+            if (event!!.values[0] == 0F && isRunning == false) {
                 var value = event.values[0]
                 isRunning = true
                 display_img.visibility = View.VISIBLE
