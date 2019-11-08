@@ -12,9 +12,11 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.icu.text.SimpleDateFormat
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.provider.MediaStore
@@ -23,6 +25,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.google.android.gms.location.*
@@ -31,6 +34,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.util.*
 
 
 class MainActivity : AppCompatActivity(), SensorEventListener  {
@@ -55,6 +59,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
     val PERMISSION_ID = 42
     lateinit var mFusedLocationClient: FusedLocationProviderClient
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -104,7 +109,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
                 val denunciaEdit = Denuncia(
                     this.etTitulo.text.toString(),
                     this.etInfo.text.toString(),
-                    "02/11/2019",
+                    denuncia.data,
                     "DER",
                     this.tvLocal.text.toString(),
                     toByteArrayImg(this.ivCamera.drawable.toBitmap())
@@ -131,19 +136,23 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
         sensorManager!!.unregisterListener(this)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun onClickEnviar(view: View) {
         val titulo = this@MainActivity.etTitulo.text.toString()
         val descricao = this@MainActivity.etInfo.text.toString()
         val local = this@MainActivity.tvLocal.text.toString()
         val imagem = this@MainActivity.ivCamera.drawable.toBitmap()
+        val simpleData = SimpleDateFormat("dd-MM-yyyy")
+        val data = Date()
+        val dataFormatada = simpleData.format(data)
 
-        val denuncia = Denuncia(titulo, descricao, "02/11/2019", "DER", local, toByteArrayImg(imagem))
+        val denuncia = Denuncia(titulo, descricao, dataFormatada, "DER", local, toByteArrayImg(imagem))
 
         val itResp = Intent(this, ListActivity::class.java)
         itResp.putExtra("DENUNCIA", denuncia)
 //        onClickEmail(denuncia)
         this.dao.insert(denuncia)
-        Log.i("APP_DENUNCIA", "denuncia ${denuncia} AQUIIIIIIIII")
+        Log.i("APP_DENUNCIA", "data da denuncia criada ${denuncia.data} AQUIIIIIIIII")
 
 //            setResult(Activity.RESULT_OK, itResp)
         startActivityForResult(itResp, FORMULARIO)
