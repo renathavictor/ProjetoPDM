@@ -32,7 +32,7 @@ class DenunciaAdapter(var context: Context, var listDenuncias: ArrayList<Denunci
 
 
         if (position % 2 == 0) {
-            linha.setBackgroundColor(Color.rgb(230, 255, 243))
+            linha.setBackgroundColor(Color.rgb(255, 230, 230))
         } else {
             linha.setBackgroundColor(Color.WHITE)
         }
