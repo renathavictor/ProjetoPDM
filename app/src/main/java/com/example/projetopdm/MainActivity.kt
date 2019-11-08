@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
 //    private lateinit var btCancelar: Button
     private lateinit var etTitulo: EditText
     private lateinit var etInfo: EditText
-    private lateinit var etLocal: EditText
+    private lateinit var tvLocal: TextView
     private lateinit var ivCamera: ImageView
 
     // sensor
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
         this.btVoltar = findViewById(R.id.btMainVoltar)
         this.etTitulo = findViewById(R.id.etMainTitulo)
         this.etInfo = findViewById(R.id.etMainInfo)
-        this.etLocal = findViewById(R.id.etMainLocalizacao)
+        this.tvLocal = findViewById(R.id.etMainLocalizacao)
         this.ivCamera = findViewById(R.id.ivMainCamera)
 
 
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
         if (denuncia != null){
             this.etTitulo.text.append((denuncia as Denuncia).titulo)
             this.etInfo.text.append((denuncia as Denuncia).descricao)
-            this.etLocal.text.append((denuncia as Denuncia).localizacao)
+            this.tvLocal.text = ((denuncia as Denuncia).localizacao)
             this.ivCamera.setImageBitmap((BitmapFactory.decodeByteArray(((denuncia as Denuncia).foto), 0, ((denuncia as Denuncia).foto).size)) as Bitmap)
             this.btEnviar.setOnClickListener{
                 val denunciaEdit = Denuncia(
@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
                     this.etInfo.text.toString(),
                     "02/11/2019",
                     "DER",
-                    this.etLocal.text.toString(),
+                    this.tvLocal.text.toString(),
                     toByteArrayImg(this.ivCamera.drawable.toBitmap())
                 )
                 val intent = Intent(this, ListActivity::class.java)
@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
     fun onClickEnviar(view: View) {
         val titulo = this@MainActivity.etTitulo.text.toString()
         val descricao = this@MainActivity.etInfo.text.toString()
-        val local = this@MainActivity.etLocal.text.toString()
+        val local = this@MainActivity.tvLocal.text.toString()
         val imagem = this@MainActivity.ivCamera.drawable.toBitmap()
 
         val denuncia = Denuncia(titulo, descricao, "02/11/2019", "DER", local, toByteArrayImg(imagem))
@@ -236,7 +236,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
                     if (location == null) {
                         requestNewLocationData()
                     } else {
-                        this.etLocal.setText("Latitude: "+ location.latitude.toString()+" Longitude: "+location.longitude.toString())
+                        this.tvLocal.setText("Latitude: "+ location.latitude.toString()+" Longitude: "+location.longitude.toString())
 //                        findViewById<TextView>(R.id.latTextView).text = location.latitude.toString()
 //                        findViewById<TextView>(R.id.lonTextView).text = location.longitude.toString()
                     }
@@ -269,7 +269,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
     private val mLocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             var mLastLocation: Location = locationResult.lastLocation
-            this@MainActivity.etLocal.setText("Latitude: "+mLastLocation.latitude.toString()+" Longitude: "+mLastLocation.longitude.toString())
+            this@MainActivity.tvLocal.setText("Latitude: "+mLastLocation.latitude.toString()+" Longitude: "+mLastLocation.longitude.toString())
 //            findViewById<TextView>(R.id.latTextView).text = mLastLocation.latitude.toString()
 //            findViewById<TextView>(R.id.lonTextView).text = mLastLocation.longitude.toString()
         }
