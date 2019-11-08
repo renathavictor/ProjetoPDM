@@ -44,7 +44,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
     private lateinit var dao: DenunciaDAO
     private lateinit var btEnviar: Button
     private lateinit var btVoltar: Button
-//    private lateinit var btCancelar: Button
     private lateinit var etTitulo: EditText
     private lateinit var etInfo: EditText
     private lateinit var tvLocal: TextView
@@ -54,8 +53,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
     private lateinit var sensorManager: SensorManager
     private var sensor: Sensor? = null
     private lateinit var root: View
-
-
     val PERMISSION_ID = 42
     lateinit var mFusedLocationClient: FusedLocationProviderClient
 
@@ -70,24 +67,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
         this.dao = DenunciaDAO(this)
 
         this.btEnviar = findViewById(R.id.btMainEnviar)
-//        this.btCancelar = findViewById(R.id.btMainCancelar)
         this.btVoltar = findViewById(R.id.btMainVoltar)
         this.etTitulo = findViewById(R.id.etMainTitulo)
         this.etInfo = findViewById(R.id.etMainInfo)
         this.tvLocal = findViewById(R.id.etMainLocalizacao)
         this.ivCamera = findViewById(R.id.ivMainCamera)
 
-
         display_img.visibility = View.INVISIBLE
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
 
-//        this.btCancelar.setOnClickListener{
-//            this.etTitulo.text = null
-//            this.etLocal.text = null
-//            this.etInfo.text = null
-//            this.ivCamera.setImageBitmap(null)
-//        }
         this.btVoltar.setOnClickListener{
             val it = Intent(this, ListActivity::class.java)
             startActivity(it)
@@ -152,9 +141,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
         itResp.putExtra("DENUNCIA", denuncia)
 //        onClickEmail(denuncia)
         this.dao.insert(denuncia)
-        Log.i("APP_DENUNCIA", "data da denuncia criada ${denuncia.data} AQUIIIIIIIII")
-
-//            setResult(Activity.RESULT_OK, itResp)
         startActivityForResult(itResp, FORMULARIO)
     }
 
@@ -183,33 +169,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
                 val imagem = data?.extras?.get("data") as Bitmap
                 this.ivCamera.setImageBitmap(imagem)
             }
-//            else if (requestCode == FORMULARIO) {
-//                val denuncia = (data?.extras?.get("data")) as Denuncia
-//                this.dao.insert(denuncia)
-//                Log.i("APP_DENUNCIA", "Denuncia: ")
-//
-//            }
         }
     }
-
-//    inner class OnClickBotaoEnviar: View.OnClickListener {
-//        override fun onClick(v: View?) {
-//            val titulo = this@MainActivity.etTitulo.text.toString()
-//            val descricao = this@MainActivity.etInfo.text.toString()
-//            val local = this@MainActivity.etLocal.text.toString()
-//            val imagem = this@MainActivity.ivCamera.drawable.toBitmap()
-//
-//            val denuncia = Denuncia(titulo, descricao, "02/11/2019", "DER", local)
-//
-//            val itResp = Intent()
-//
-//            itResp.putExtra("DENUNCIA", denuncia)
-////            setResult(Activity.RESULT_OK, itResp)
-//            startActivityForResult(itResp, FORMULARIO)
-//            finish()
-//        }
-//
-//    }
 
     // SENSOR
 
@@ -239,17 +200,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
     private fun getLastLocation() {
         if (checkPermissions()) {
             if (isLocationEnabled()) {
-
-                mFusedLocationClient.lastLocation.addOnCompleteListener(this) { task ->
-                    var location: Location? = task.result
-                    if (location == null) {
-                        requestNewLocationData()
-                    } else {
-                        this.tvLocal.setText("Latitude: "+ location.latitude.toString()+" Longitude: "+location.longitude.toString())
-//                        findViewById<TextView>(R.id.latTextView).text = location.latitude.toString()
-//                        findViewById<TextView>(R.id.lonTextView).text = location.longitude.toString()
-                    }
-                }
+                requestNewLocationData()
+//                mFusedLocationClient.lastLocation.addOnCompleteListener(this) { task ->
+//                    var location: Location? = task.result
+//                    if (location == null) {
+//                        requestNewLocationData()
+//                    } else {
+//                        this.tvLocal.setText("Latitude: "+ location.latitude.toString()+" Longitude: "+location.longitude.toString())
+//                    }
+//                }
             } else {
                 Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show()
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
@@ -279,8 +238,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener  {
         override fun onLocationResult(locationResult: LocationResult) {
             var mLastLocation: Location = locationResult.lastLocation
             this@MainActivity.tvLocal.setText("Latitude: "+mLastLocation.latitude.toString()+" Longitude: "+mLastLocation.longitude.toString())
-//            findViewById<TextView>(R.id.latTextView).text = mLastLocation.latitude.toString()
-//            findViewById<TextView>(R.id.lonTextView).text = mLastLocation.longitude.toString()
         }
     }
 
