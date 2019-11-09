@@ -7,3 +7,8 @@
  - [ ] Persistência com banco de dados
  - [ ] Serviço broadcast
  - [ ] Sensores
+ 
+ #### Equipe 
+[Adriano Amaral](https://github.com/adrianonna)
+
+[Renatha Victor](https://github.com/renathavictor)
