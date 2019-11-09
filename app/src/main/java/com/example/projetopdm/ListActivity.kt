@@ -2,6 +2,7 @@ package com.example.projetopdm
 
 import android.app.Activity
 import android.content.Intent
+import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +15,7 @@ class ListActivity : AppCompatActivity() {
     private lateinit var lvDenuncia: ListView
     private lateinit var dao: DenunciaDAO
     private lateinit var lista: ArrayList<Denuncia>
+    private lateinit var aviaoReceiver: AviaoReceiver
     var POSSICAO_EDIT = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +29,7 @@ class ListActivity : AppCompatActivity() {
         this.lvDenuncia.adapter = DenunciaAdapter(this, this.lista)
         this.lvDenuncia.setOnItemClickListener(ClickList())
         this.lvDenuncia.setOnItemLongClickListener(LongClickList())
+        this.aviaoReceiver = AviaoReceiver()
 
 
         fabList.setOnClickListener{
@@ -34,6 +37,18 @@ class ListActivity : AppCompatActivity() {
             startActivity(it)
             finish()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val it = IntentFilter()
+        it.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
+        registerReceiver(this.aviaoReceiver, it)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(this.aviaoReceiver)
     }
 
     fun atualizaLista(){
